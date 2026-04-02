@@ -1,1 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Little World Made For You 🌼</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+</head>
+<body>
 
+    <!-- ==================== LOADING SCREEN ==================== -->
+    <div id="loading-screen">
+        <div class="loader-flower">🌸</div>
+        <p class="loader-text">Preparing your little world...</p>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div id="toast-container"></div>
+
+    <!-- ==================== GARDEN MAP (Main Hub) ==================== -->
+    <div id="garden-map" class="screen">
+
+        <!-- Sky & Decorations -->
+        <div class="garden-sky">
+            <div class="sun"></div>
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+        </div>
+
+        <!-- Hills -->
+        <div class="garden-hills">
+            <div class="hill hill-1"></div>
+            <div class="hill hill-2"></div>
+            <div class="hill hill-3"></div>
+        </div>
+
+        <!-- Pond Shape (decorative, behind seal icon) -->
+        <div class="pond-shape"></div>
+
+        <!-- Map Title -->
+        <div class="garden-title">
+            <h1>The Garden of Us</h1>
+            <p>klik sekeliling untuk menjelajah 💛</p>
+        </div>
+
+        <!-- ===== CLICKABLE MAP ITEMS ===== -->
+
+        <!-- Memory Book — top left -->
+        <div class="map-item" id="map-memory" data-room="memory">
+            <div class="item-circle" style="background: linear-gradient(135deg, #FFEAA7, #F9E784);">
+                <span class="item-icon">📖</span>
+            </div>
+            <span class="item-label">Memory Book</span>
+        </div>
+
+        <!-- Music Room — top right -->
+        <div class="map-item" id="map-music" data-room="music">
+            <div class="item-circle" style="background: linear-gradient(135deg, #FFB7B2, #FF9AA2);">
+                <span class="item-icon">🏠</span>
+            </div>
+            <span class="item-label">Music Room</span>
+        </div>
+
+        <!-- Birthday Gift — center (locked initially) -->
+        <div class="map-item locked" id="map-birthday" data-room="birthday">
+            <div class="item-circle gift-circle">
+                <span class="item-icon">🎁</span>
+                <div class="lock-overlay">🔒</div>
+            </div>
+            <span class="item-label" id="gift-label">???</span>
+        </div>
+
+        <!-- Seal Pond — bottom left -->
+        <div class="map-item" id="map-seal" data-room="seal">
+            <div class="item-circle" style="background: linear-gradient(135deg, #89CFF0, #A8D8EA);">
+                <span class="item-icon">
+                    <svg viewBox="0 0 100 85" width="44" height="38">
+                        <ellipse cx="50" cy="50" rx="32" ry="22" fill="#8B7D6B"/>
+                        <ellipse cx="50" cy="35" rx="20" ry="18" fill="#9B8B7B"/>
+                        <ellipse cx="25" cy="55" rx="10" ry="6" fill="#8B7D6B" transform="rotate(-15,25,55)"/>
+                        <ellipse cx="75" cy="55" rx="10" ry="6" fill="#8B7D6B" transform="rotate(15,75,55)"/>
+                        <circle cx="42" cy="32" r="4" fill="#2D3436"/>
+                        <circle cx="58" cy="32" r="4" fill="#2D3436"/>
+                        <circle cx="43.5" cy="30.5" r="1.5" fill="#fff"/>
+                        <circle cx="59.5" cy="30.5" r="1.5" fill="#fff"/>
+                        <ellipse cx="50" cy="38" rx="4" ry="2.5" fill="#6B5D4B"/>
+                        <circle cx="38" cy="38" r="5" fill="rgba(255,150,150,0.35)"/>
+                        <circle cx="62" cy="38" r="5" fill="rgba(255,150,150,0.35)"/>
+                        <path d="M46 41 Q50 44 54 41" stroke="#6B5D4B" fill="none" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </div>
+            <span class="item-label">Seal Pond</span>
+        </div>
+
+        <!-- Thrift Closet — bottom right -->
+        <div class="map-item" id="map-closet" data-room="closet">
+            <div class="item-circle" style="background: linear-gradient(135deg, #DDA0DD, #E8B4E8);">
+                <span class="item-icon">🧥</span>
+            </div>
+            <span class="item-label">Thrift Closet</span>
+        </div>
+
+        <!-- Decorative Flowers -->
+        <div class="deco-flower" style="left:8%; bottom:12%;">🌼</div>
+        <div class="deco-flower" style="left:22%; bottom:8%;">🌻</div>
+        <div class="deco-flower" style="left:45%; bottom:6%;">🌷</div>
+        <div class="deco-flower" style="left:65%; bottom:10%;">🌸</div>
+        <div class="deco-flower" style="left:82%; bottom:14%;">🌺</div>
+        <div class="deco-flower" style="left:35%; bottom:18%; font-size:18px;">🌱</div>
+        <div class="deco-flower" style="left:55%; bottom:20%; font-size:16px;">🍀</div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-bar">
+            <span class="progress-text">Jelajahi semua area untuk membuka hadiah spesial ✨</span>
+            <div class="progress-dots">
+                <div class="pdot" data-area="seal" title="Seal Pond"></div>
+                <div class="pdot" data-area="music" title="Music Room"></div>
+                <div class="pdot" data-area="closet" title="Thrift Closet"></div>
+                <div class="pdot" data-area="memory" title="Memory Book"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SEAL POND ROOM ==================== -->
+    <div id="seal-pond" class="room">
+        <button class="back-btn" onclick="closeRoom('seal')">
+            <span>←</span> Kembali
+        </button>
+        <div class="room-title-area">
+            <h2>🌊 Seal Pond</h2>
+            <p>klik seal-sealnya untuk mendengar sesuatu...</p>
+        </div>
+        <div class="pond-scene">
+            <!-- Lily pads -->
+            <div class="lily-pad" style="left:10%; top:60%;"></div>
+            <div class="lily-pad" style="left:75%; top:20%;"></div>
+            <div class="lily-pad" style="left:50%; top:80%;"></div>
+
+            <!-- Seals -->
+            <div class="seal" id="seal-1">
+                <svg viewBox="0 0 100 85" width="90" height="75">
+                    <ellipse cx="50" cy="50" rx="32" ry="22" fill="#8B7D6B"/>
+                    <ellipse cx="50" cy="35" rx="20" ry="18" fill="#9B8B7B"/>
+                    <ellipse cx="25" cy="55" rx="10" ry="6" fill="#8B7D6B" transform="rotate(-15,25,55)"/>
+                    <ellipse cx="75" cy="55" rx="10" ry="6" fill="#8B7D6B" transform="rotate(15,75,55)"/>
+                    <circle cx="42" cy="32" r="4" fill="#2D3436"/>
+                    <circle cx="58" cy="32" r="4" fill="#2D3436"/>
+                    <circle cx="43.5" cy="30.5" r="1.5" fill="#fff"/>
+                    <circle cx="59.5" cy="30.5" r="1.5" fill="#fff"/>
+                    <ellipse cx="50" cy="38" rx="4" ry="2.5" fill="#6B5D4B"/>
+                    <circle cx="38" cy="38" r="5" fill="rgba(255,150,150,0.35)"/>
+                    <circle cx="62" cy="38" r="5" fill="rgba(255,150,150,0.35)"/>
+                    <path d="M46 41 Q50 44 54 41" stroke="#6B5D4B" fill="none" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="seal" id="seal-2" style="left:55%; top:35%;">
+                <svg viewBox="0 0 100 85" width="75" height="63">
+                    <ellipse cx="50" cy="50" rx="32" ry="22" fill="#7B6D5B"/>
+                    <ellipse cx="50" cy="35" rx="20" ry="18" fill="#8B7B6B"/>
+                    <ellipse cx="25" cy="55" rx="10" ry="6" fill="#7B6D5B" transform="rotate(-15,25,55)"/>
+                    <ellipse cx="75" cy="55" rx="10" ry="6" fill="#7B6D5B" transform="rotate(15,75,55)"/>
+                    <circle cx="42" cy="32" r="4" fill="#2D3436"/>
+                    <circle cx="58" cy="32" r="4" fill="#2D3436"/>
+                    <circle cx="43.5" cy="30.5" r="1.5" fill="#fff"/>
+                    <circle cx="59.5" cy="30.5" r="1.5" fill="#fff"/>
+                    <ellipse cx="50" cy="38" rx="4" ry="2.5" fill="#5B4D3B"/>
+                    <circle cx="38" cy="38" r="5" fill="rgba(255,150,150,0.35)"/>
+                    <circle cx="62" cy="38" r="5" fill="rgba(255,150,150,0.35)"/>
+                    <path d="M46 41 Q50 44 54 41" stroke="#5B4D3B" fill="none" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="seal" id="seal-3" style="left:30%; top:55%;">
+                <svg viewBox="0 0 100 85" width="65" height="55">
+                    <ellipse cx="50" cy="50" rx="32" ry="22" fill="#9B8D7B"/>
+                    <ellipse cx="50" cy="35" rx="20" ry="18" fill="#AB9B8B"/>
+                    <ellipse cx="25" cy="55" rx="10" ry="6" fill="#9B8D7B" transform="rotate(-15,25,55)"/>
+                    <ellipse cx="75" cy="55" rx="10" ry="6" fill="#9B8D7B" transform="rotate(15,75,55)"/>
+                    <circle cx="42" cy="32" r="4" fill="#2D3436"/>
+                    <circle cx="58" cy="32" r="4" fill="#2D3436"/>
+                    <circle cx="43.5" cy="30.5" r="1.5" fill="#fff"/>
+                    <circle cx="59.5" cy="30.5" r="1.5" fill="#fff"/>
+                    <ellipse cx="50" cy="38" rx="4" ry="2.5" fill="#7B6D5B"/>
+                    <circle cx="38" cy="38" r="5" fill="rgba(255,150,150,0.35)"/>
+                    <circle cx="62" cy="38" r="5" fill="rgba(255,150,150,0.35)"/>
+                    <path d="M46 41 Q50 44 54 41" stroke="#7B6D5B" fill="none" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Seal Speech Bubble -->
+        <div id="seal-bubble" class="seal-bubble hidden">
+            <p id="seal-bubble-text"></p>
+        </div>
+    </div>
+
+    <!-- ==================== MUSIC ROOM ==================== -->
+    <div id="music-room" class="room">
+        <button class="back-btn" onclick="closeRoom('music')">
+            <span>←</span> Kembali
+        </button>
+        <div class="room-title-area">
+            <h2>🎧 Music Room</h2>
+            <p>lagu-lagu untuk kita 💛</p>
+        </div>
+        <div class="music-player-container">
+            <!-- Vinyl Record -->
+            <div class="vinyl-wrapper">
+                <div class="vinyl" id="vinyl-disc">
+                    <div class="vinyl-label">
+                        <span>💛</span>
+                    </div>
+                </div>
+                <div class="tonearm" id="tonearm"></div>
+            </div>
+
+            <!-- Now Playing -->
+            <div class="now-playing">
+                <p class="now-playing-label">Now Playing</p>
+                <h3 id="song-title">—</h3>
+                <p id="song-artist" class="artist-name">—</p>
+                <!-- Progress -->
+                <div class="progress-track">
+                    <div class="progress-fill" id="song-progress"></div>
+                </div>
+                <div class="time-display">
+                    <span id="time-current">0:00</span>
+                    <span id="time-total">0:00</span>
+                </div>
+                <!-- Controls -->
+                <div class="player-controls">
+                    <button class="ctrl-btn" id="btn-prev" onclick="prevSong()">⏮</button>
+                    <button class="ctrl-btn play-btn" id="btn-play" onclick="togglePlay()">▶</button>
+                    <button class="ctrl-btn" id="btn-next" onclick="nextSong()">⏭</button>
+                </div>
+            </div>
+
+            <!-- Playlist -->
+            <div class="playlist" id="playlist">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== THRIFT CLOSET ==================== -->
+    <div id="thrift-closet" class="room">
+        <button class="back-btn" onclick="closeRoom('closet')">
+            <span>←</span> Kembali
+        </button>
+        <div class="room-title-area">
+            <h2>🧥 Thrift Closet</h2>
+            <p>klik baju-bajunya ya...</p>
+        </div>
+        <div class="closet-rack">
+            <div class="rack-bar"></div>
+            <div class="clothing-item" data-index="0">
+                <div class="hanger"></div>
+                <div class="clothes clothes-dress"></div>
+            </div>
+            <div class="clothing-item" data-index="1">
+                <div class="hanger"></div>
+                <div class="clothes clothes-shirt"></div>
+            </div>
+            <div class="clothing-item" data-index="2">
+                <div class="hanger"></div>
+                <div class="clothes clothes-jacket"></div>
+            </div>
+            <div class="clothing-item" data-index="3">
+                <div class="hanger"></div>
+                <div class="clothes clothes-skirt"></div>
+            </div>
+        </div>
+
+        <!-- Closet Modal (shows when item clicked) -->
+        <div id="closet-modal" class="closet-modal hidden">
+            <div class="closet-modal-content">
+                <button class="modal-close" onclick="closeClosetModal()">×</button>
+                <div id="closet-modal-photo" class="closet-modal-photo">
+                    <img src="assets/images/closet-1.jpg" alt="Outfit" id="closet-img">
+                    <div class="photo-placeholder" id="closet-placeholder">
+                        <span>📷 Letakkan foto outfit di sini</span>
+                        <small>assets/images/closet-X.jpg</small>
+                    </div>
+                </div>
+                <p id="closet-modal-text" class="closet-modal-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MEMORY BOOK ==================== -->
+    <div id="memory-book" class="room">
+        <button class="back-btn" onclick="closeRoom('memory')">
+            <span>←</span> Kembali
+        </button>
+        <div class="room-title-area">
+            <h2>📖 Memory Book</h2>
+            <p>buka halaman-halamannya...</p>
+        </div>
+        <div class="book-container">
+            <div class="book">
+                <button class="page-nav page-prev" id="page-prev" onclick="changePage(-1)">‹</button>
+
+                <!-- Pages (generated by JS, but here's the structure) -->
+                <div class="book-spine"></div>
+                <div class="book-pages" id="book-pages">
+                    <!-- Page content injected by JS -->
+                </div>
+
+                <button class="page-nav page-next" id="page-next" onclick="changePage(1)">›</button>
+            </div>
+            <div class="page-indicator" id="page-indicator">1 / 5</div>
+        </div>
+    </div>
+
+    <!-- ==================== BIRTHDAY ENDING ==================== -->
+    <div id="birthday-ending" class="room">
+        <div class="birthday-overlay"></div>
+        <div class="confetti-container" id="confetti-container"></div>
+        <div class="birthday-content">
+            <div class="birthday-stars">✨ 🌟 ✨</div>
+            <h1 class="birthday-title" id="birthday-title">Happy Birthday</h1>
+            <div class="birthday-divider">💛</div>
+            <div class="birthday-message" id="birthday-message">
+                <!-- Injected by JS with typewriter effect -->
+            </div>
+            <div class="birthday-footer">
+                <p>— with all my love, always 💛</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
